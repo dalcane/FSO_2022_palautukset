@@ -19,7 +19,7 @@ const App = () => {
         return(
     <div>
         <Header course={course.name}/>
-        <Content parts={course}/>
+        <Content parts={course.parts}/>
         <Total/>
     </div>
 )
@@ -33,12 +33,13 @@ const Header = (props) => {
     )
 }
 
-//tämä sisältää hyvin kyseenalaista settiä
+//Sisältökomponentti
+
 const Content = (props) => {
     console.log(props)
-    const courses = props.parts.parts;
-    const statList = courses.map((kurssi) =>
-        <li>{kurssi.name} laajuus {kurssi.exercises}</li>
+    const courses = props.parts;
+    const statList = courses.map((kurssi, index) =>
+        <li key={"itam-${index}"}> {kurssi.name} laajuus {kurssi.exercises}</li>
     );
         return (
             <div>

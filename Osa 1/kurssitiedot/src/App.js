@@ -36,9 +36,9 @@ const Header = (props) => {
 //tämä sisältää hyvin kyseenalaista settiä
 const Content = (props) => {
     console.log(props)
-    const Courses = props.parts;
-    const statList = Courses.map((value) =>
-        <li>{value}</li>
+    const courses = props.parts.parts;
+    const statList = courses.map((kurssi) =>
+        <li>{kurssi.name} laajuus {kurssi.exercises}</li>
     );
         return (
             <div>

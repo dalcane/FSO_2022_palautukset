@@ -12,10 +12,36 @@ const Button = (props) => (
     </button>
 )
 
-const Content = (props) => (
-    <p> {props.text} : {props.stateOf}</p>
-)
 
+const StatisticsLine = (props) => {
+    return (
+        <p> {props.text}:  {props.value}</p>
+    )
+}
+
+const Statistics = ({text, good, bad, neutral}) => {
+
+    let average = (good + -1 * bad) / (good + bad + neutral)
+    let percentGood = (good / (good + bad + neutral) * 100) + " %"
+
+    if (good === 0 && bad === 0 && neutral === 0) {
+        return (
+            <div>No feedback given.</div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <StatisticsLine text="Good" value={good} />
+                <StatisticsLine text="Neutral" value={neutral} />
+                <StatisticsLine text="Bad" value={bad} />
+                <StatisticsLine text="Average" value={average} />
+                <StatisticsLine text="Positive" value={percentGood} />
+            </div>
+
+            )
+        }
+    }
 
 
 const App = () => {
@@ -24,11 +50,6 @@ const App = () => {
     const [neutral, setNeutral] = useState(0)
     const [bad, setBad] = useState(0)
 
-    //en tiedä, kuinka kosher on tehdä nämä operaatiot suoraan muuttujaan, mutta
-    //tämä tuntui helpoimmalta tavalta
-    const average = (good + -1 * bad) / (good+bad+neutral);
-    const percentGood = (good/(good+bad+neutral)*100) + " %"
-
   return (
       <div>
         <Header otsikko = "Give Feedback" />
@@ -36,11 +57,7 @@ const App = () => {
           <Button handleClick={() => setNeutral(neutral+1)} text="Neutral" />
           <Button handleClick={() => setBad(bad+1)} text="Bad" />
           <Header otsikko="Statistics"/>
-          <Content text= "Good" stateOf = {good} />
-          <Content text= "Neutral" stateOf = {neutral} />
-          <Content text= "Bad" stateOf = {bad} />
-          <Content text= "Average" stateOf={average} />
-          <Content text= "Positive" stateOf={percentGood} />
+          <Statistics text= "Positive" good={good} bad={bad} neutral = {neutral} />
 
       </div>
   )

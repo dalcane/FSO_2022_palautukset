@@ -39,10 +39,9 @@ const Content = (props) => {
     console.log(props)
     const courses = props.parts;
     const statList = courses.map((kurssi, index) =>
+
         <li key={"itam-${index}"}>
-            <Part name={kurssi.name}
-                  exercises={kurssi.exercises}
-            />
+            <Part name={kurssi.name} exercises={kurssi.exercises} />
         </li>
     );
     return (

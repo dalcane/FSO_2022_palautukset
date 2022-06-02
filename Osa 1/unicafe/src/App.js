@@ -13,14 +13,7 @@ const Button = (props) => (
 )
 
 
-const StatisticsLine = (props) => {
-    return (
-        <p> {props.text}:  {props.value}</p>
-    )
-}
-
-const Statistics = ({text, good, bad, neutral}) => {
-
+const Statistics = ({ good, bad, neutral}) => {
     let average = (good + -1 * bad) / (good + bad + neutral)
     let percentGood = (good / (good + bad + neutral) * 100) + " %"
 
@@ -31,17 +24,23 @@ const Statistics = ({text, good, bad, neutral}) => {
     }
     else {
         return (
-            <div>
-                <StatisticsLine text="Good" value={good} />
-                <StatisticsLine text="Neutral" value={neutral} />
-                <StatisticsLine text="Bad" value={bad} />
-                <StatisticsLine text="Average" value={average} />
-                <StatisticsLine text="Positive" value={percentGood} />
-            </div>
+            <ul>
+                <li> <StatisticsLine text="Good" value={good} /> </li>
+                <li> <StatisticsLine text="Neutral" value={neutral} /> </li>
+                <li> <StatisticsLine text="Bad" value={bad} /> </li>
+                <li> <StatisticsLine text="Average" value={average} /> </li>
+                <li> <StatisticsLine text="Positive" value={percentGood} /> </li>
+            </ul>
 
             )
         }
     }
+
+const StatisticsLine = (props) => {
+    return (
+        <p> {props.text}:  {props.value}</p>
+    )
+}
 
 
 const App = () => {
@@ -57,7 +56,7 @@ const App = () => {
           <Button handleClick={() => setNeutral(neutral+1)} text="Neutral" />
           <Button handleClick={() => setBad(bad+1)} text="Bad" />
           <Header otsikko="Statistics"/>
-          <Statistics text= "Positive" good={good} bad={bad} neutral = {neutral} />
+          <Statistics good={good} bad={bad} neutral={neutral} />
 
       </div>
   )

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import {useState} from 'react'
 
 const Button = (props) => (
     <button onClick={props.handleClick}>
@@ -6,19 +6,11 @@ const Button = (props) => (
     </button>
 )
 
-const AddVote = ({text, votes}) => {
 
-    return(
-    <div>
-         has {votes} votes
-    </div>
-    )
-
-}
 
 const App = () => {
 
-    const anecdotes = [
+    const [anecdotes, setAnecdotes] = useState([
         {
             text: 'If it hurts, do it more often.',
             votes: 0
@@ -48,24 +40,69 @@ const App = () => {
             votes: 0
         }
 
-    ]
+    ])
 
     const [selected, setSelected] = useState(0)
+    const [newVote, setNewVote] = useState(0)
 
-
-
-
-  function randomInt (max) {
+    function randomInt (max) {
     return Math.floor(Math.random() * max)
-  }
+    }
 
-  return (
+    const addVote = (event) =>{
+        event.preventDefault()
+        const newAnecdotes = [...anecdotes];
+        newAnecdotes[selected] = anecdotes[selected];
+        newAnecdotes[selected].votes = newVote;
+        setAnecdotes(newAnecdotes);
+    }
+
+    function doTwo() {
+        setSelected(randomInt(anecdotes.length))
+        setNewVote(0)
+
+    }
+
+
+    const showMax = () =>{
+        const maxVotes = Math.max(...anecdotes.map(o=>o.votes))
+        const indexOfVote = anecdotes.findIndex(e => e.votes === maxVotes);
+        console.log(indexOfVote)
+        if (maxVotes > 0){
+            return (
+                anecdotes[indexOfVote].text
+            )
+        }else {
+            return ''
+        }
+    }
+
+    const maxVotes = Math.max(...anecdotes.map(o=>o.votes))
+
+
+
+
+    return (
       <div>
+          <h2>Anecdote of the day</h2>
           {anecdotes[selected].text}
           <div></div>
-          <AddVote votes={anecdotes[selected].votes} />
-          <Button handleClick={() => setSelected(randomInt(anecdotes.length))} text="Arvo anekdootti" />
-          <Button handleClick={() => (anecdotes[selected].votes+1)} text={"Vote"} />
+          has {anecdotes[selected].votes} votes
+          <div></div>
+          <form onSubmit={addVote}>
+              <div>
+                  <Button type="submit" handleClick={() => setNewVote(newVote+1)} text="Vote" />
+              </div>
+          </form>
+          <div></div>
+          <Button handleClick={() => doTwo()} text="Arvo anekdootti" />
+
+          <h2>Anecdote with most votes </h2>
+
+          {showMax()}
+          <div></div>
+          has the most votes: {maxVotes}
+
       </div>
   )
 }

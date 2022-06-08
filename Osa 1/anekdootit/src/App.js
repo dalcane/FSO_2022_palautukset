@@ -60,7 +60,6 @@ const App = () => {
     function doTwo() {
         setSelected(randomInt(anecdotes.length))
         setNewVote(0)
-
     }
 
 

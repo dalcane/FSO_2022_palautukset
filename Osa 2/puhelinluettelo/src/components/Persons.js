@@ -1,11 +1,16 @@
 import Person from "./Person";
+import personService from "../services/personService";
 
-const Persons = ({ persons }) => {
-    let {namesToShow} = persons
+const Persons = ({ persons, handleDelete}) => {
+    const label = 'Delete'
+
     return (
         <ul>
-            {namesToShow.map((person, index) =>
-                <Person key={person.name} person={person} />
+            {persons.map((p, index) =>
+                <li key={p.name}>{p.name} : {p.number}
+                    <button value={p.id} onClick={handleDelete} name={p.name}>{label}
+                    </button>
+                </li>
             )}
         </ul> )
 }

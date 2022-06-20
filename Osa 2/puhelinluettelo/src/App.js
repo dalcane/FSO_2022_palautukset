@@ -3,6 +3,8 @@ import Filter from "./components/Filter";
 import Form from "./components/Form";
 import Persons from "./components/Persons";
 import personService from './services/personService'
+import './index.css'
+import Notification from "./components/Notification";
 
 const App = () => {
 
@@ -11,6 +13,7 @@ const App = () => {
     const [newNumber, setNewNumber] = useState('')
     const [searchInput, setSearchInput] = useState('')
     const [showAll] = useState(false)
+    const [errorMessage, setErrorMessage] = useState(null)
 
     useEffect(() => {
         personService
@@ -20,13 +23,16 @@ const App = () => {
         })
     }, [])
 
-
-
     const addName = (event) => {
         event.preventDefault()
 
+        let ids = persons.map(o => {
+            return o.id
+        })
+        const max = Math.max(...ids)
+
         const nameObject = {
-            id: persons.length + 1,
+            id: max+1,
             name: newName,
             number: newNumber,
         }
@@ -51,23 +57,38 @@ const App = () => {
                         }))
                         setNewName('')
                         setNewNumber('')
-                window.alert("Number changed!")
+                        setErrorMessage('Number was changed!')
+                        setTimeout(() => {
+                            setErrorMessage(null)
+                        }, 5000)
                         personService
                             .getAll()
                             .then(initialPersons => setPersons(initialPersons))
             })
+                    .catch(error =>{
+                        setErrorMessage("The person was already deleted on another machine.")
+                        setTimeout(() => {
+                            setErrorMessage(null)
+                        }, 5000)
+                        setPersons(persons.filter(p => p.id !==numberObject.id))
+                    })
 
-        }else{
+        }
+    } else{
             personService
                 .create(nameObject)
                 .then(returnedName =>{
-                setPersons(persons.concat(returnedName))
-                    setNewName('')
-                    setNewNumber('')
-            })
+                    setPersons(persons.concat(returnedName))
+                })
+            setErrorMessage(`Added ${newName} to phonebook.` )
+            setTimeout(() => {
+                setErrorMessage(null)
+            }, 5000)
+            setNewName('')
+            setNewNumber('')
         }
     }
-    }
+
     function handleDelete(event) {
         const idToDelete = event.target.value
         const nameToDelete = event.target.name
@@ -77,15 +98,18 @@ const App = () => {
             .getAll()
             .then(initialPersons => {
             setPersons(initialPersons)
+                setErrorMessage(`Deleted ${nameToDelete}.` )
+                setTimeout(() => {
+                    setErrorMessage(null)
+                }, 5000)
         })
     }
 
     const handleNameChange = (event) => {
-        console.log(event.target.value)
         setNewName(event.target.value)
     }
+
     const handleNumberChange = (event) => {
-        console.log(event.target.value)
         setNewNumber(event.target.value)
     }
 
@@ -94,7 +118,6 @@ const App = () => {
         setSearchInput(event.target.value)
     }
 
-    //tyhjällä kentällä näytetään kaikki, mutta jos kenttä muuttuu, palautetaan fillteröity versio
     const namesToShow = showAll
         ?persons
         :persons.filter((person)=> {
@@ -104,6 +127,7 @@ const App = () => {
     return (
       <div>
         <h2>Phonebook</h2>
+          <Notification message={errorMessage} />
           <Filter search = {handleSearch} input={searchInput} />
           <h2>Add new contact</h2>
           <Form addName={addName} newName = {newName} newNumber={newNumber} changeName={handleNameChange} changeNumber={handleNumberChange}/>

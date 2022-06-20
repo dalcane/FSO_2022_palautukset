@@ -1,5 +1,3 @@
-import Person from "./Person";
-import personService from "../services/personService";
 
 const Persons = ({ persons, handleDelete}) => {
     const label = 'Delete'
